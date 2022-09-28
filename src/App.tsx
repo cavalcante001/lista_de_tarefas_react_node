@@ -1,25 +1,64 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
 
-function App() {
+import { useState, useEffect } from 'react';
+import * as C from './App.styles';
+import { ListItem } from './Components/ListItem';
+import { AddArea } from './Components/AddArea';
+import { api } from './Services/api';
+import { Tarefa } from './Types/Tarefa';
+const App = () => {
+
+  const [loading, setLoading] = useState(false);
+  const [errorMessage, setErrorMessage] = useState('');
+  const [pressEnter, setPressEnter] = useState(false);
+  const [tarefas, setTarefas] = useState<Tarefa[]>([]);
+  const [activePlus, setActivePlus] = useState(true);
+
+  useEffect(() => {
+    carregarTarefas();
+  }, []);
+
+  useEffect(() => {
+    window.addEventListener('keydown', (e) => {
+      switch(e.code) {
+        case 'Enter':
+          setPressEnter(true);
+        break;
+
+        case 'Equal':
+        case 'NumpadAdd':
+          setActivePlus(false);
+        break;
+
+        case 'Minus':
+        case 'NumpadSubtract':
+          setActivePlus(true);
+        break;
+      }
+    });
+  }, []);
+
+  const carregarTarefas = async () => {
+    try {
+      const json = await api.getAllNotes();
+      setTarefas(json.lista);
+    } catch(e) {
+      alert(e);
+    }
+  }
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <C.Container>
+      <C.Area>
+        <C.Header> LISTA DE TAREFAS: </C.Header>
+
+        <AddArea recarregarLista={carregarTarefas}/>
+
+        {tarefas.map((item,index) => (
+          <ListItem key={index} item={item} />
+        ))}
+        
+      </C.Area>
+    </C.Container>
   );
 }
 
