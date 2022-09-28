@@ -8,9 +8,7 @@ type Props = {
 export const ListItem = ({item}: Props) => {
 
     const [isChecked, setIsChecked] = useState(item.feito);
-
     
-
     return (
        <C.Container feito={isChecked}>
         <input 

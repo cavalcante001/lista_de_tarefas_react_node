@@ -7,34 +7,10 @@ import { api } from './Services/api';
 import { Tarefa } from './Types/Tarefa';
 const App = () => {
 
-  const [loading, setLoading] = useState(false);
-  const [errorMessage, setErrorMessage] = useState('');
-  const [pressEnter, setPressEnter] = useState(false);
   const [tarefas, setTarefas] = useState<Tarefa[]>([]);
-  const [activePlus, setActivePlus] = useState(true);
 
   useEffect(() => {
     carregarTarefas();
-  }, []);
-
-  useEffect(() => {
-    window.addEventListener('keydown', (e) => {
-      switch(e.code) {
-        case 'Enter':
-          setPressEnter(true);
-        break;
-
-        case 'Equal':
-        case 'NumpadAdd':
-          setActivePlus(false);
-        break;
-
-        case 'Minus':
-        case 'NumpadSubtract':
-          setActivePlus(true);
-        break;
-      }
-    });
   }, []);
 
   const carregarTarefas = async () => {
